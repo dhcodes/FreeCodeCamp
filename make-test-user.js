@@ -26,6 +26,10 @@ for (let i = 0; i<challengeSpecs.length; i++) {
       "challengeMap": {}
     }
     obj.progressTimestamps[j].timestamp = getRandomDate();
+    obj.progressTimestamps.completedChallenge = challengeSpecs[i].challenges[j]
+
+
+
     challengeCollection.push(obj)
 
   }
@@ -37,3 +41,7 @@ console.log(challengeCollection)
 }
 
 seedTestUser()
+/*
+console.log(challengeMap.length);
+db.getCollection('user').update({username:"camper1"},{$set:{"progressTimestamps":obj.progressTimestamps,"challengeMap":obj.challengeMap}},false,true)
+*/
