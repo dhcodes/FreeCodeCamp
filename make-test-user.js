@@ -1,4 +1,5 @@
 
+var Mongo = require('mongodb')
 var fs = require('fs');
 var getChallenges = require('./seed/getChallenges');
 var challengeSpecs = getChallenges();
@@ -12,36 +13,36 @@ function getRandomDate() {
 }
 
 function seedTestUser() {
-let challengeCollection = []
+let challengeProgress = []
+let challengeMapObj = {
 
+}
 
 
 for (let i = 0; i<challengeSpecs.length; i++) {
   for (let j = 0; j<challengeSpecs[i].challenges.length; j++) {
-    let obj = {
-      "progressTimestamps": [{
-        "timestamp": "",
-        "completedChallenge": ""
-      }],
-      "challengeMap": {}
+    let timestamp = getRandomDate()
+    let challengeId = challengeSpecs[i].challenges[j].id
+    let progObj = {
+        "timestamp": timestamp,
+        "completedChallenge": challengeSpecs[i].challenges[j].id
+      }
+
+    challengeMapObj[challengeId] = {
+        id: challengeId,
+        completedDate: timestamp
     }
-    obj.progressTimestamps[j].timestamp = getRandomDate();
-    obj.progressTimestamps.completedChallenge = challengeSpecs[i].challenges[j]
+    challengeProgress.push(progObj)
+      }
 
 
+    }
 
-    challengeCollection.push(obj)
-
-  }
-
-}
-console.log(challengeCollection)
-
-
+  return challengeProgress, challengeMapObj
+  console.log(process.argv[2])
 }
 
 seedTestUser()
-/*
-console.log(challengeMap.length);
-db.getCollection('user').update({username:"camper1"},{$set:{"progressTimestamps":obj.progressTimestamps,"challengeMap":obj.challengeMap}},false,true)
-*/
+new Mongo()
+let db = Mongo.connect("localhost:27020/freecodecamp")
+db.user.update({username:process.argv[2]},{$set:{"progressTimestamps":challengeProgress,"challengeMap":challengeMapObj}},false,true)
