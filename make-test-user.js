@@ -10,19 +10,28 @@ function getRandomDate() {
 }
 
 function updateDB(challengeProgress, challengeMapObj) {
+  if (!process.argv[2]) {
+    console.log(
+      'Error: Please input user as argument' +
+          '(ex. $ node make-test-user.js <usernameToUpdate>)' +
+              '\nYou can find your username on the profile page in ' +
+                  'the Settings area.'
+    );
+    return;
+  }
   MongoClient.connect('mongodb://localhost:27017/freecodecamp',
-  function(err, db) {
-  if (!err) {
-    console.log('User generated');
-    db.collection('user')
-      .update({username: process.argv[2]},
-        {$set: {progressTimestamps: challengeProgress,
-        challengeMap: challengeMapObj, isBackEndCert: true,
-        isFrontEndCert: true, isFullStackCert: true,
-        isDataVisCert: true, isHonest: true
-        }}, false, true);
-      }
-      db.close();
+  (err, db) => {
+    if (!err) {
+      console.log('User updated');
+      db.collection('user')
+        .update({username: process.argv[2]},
+          {$set: {progressTimestamps: challengeProgress,
+          challengeMap: challengeMapObj, isBackEndCert: true,
+          isFrontEndCert: true, isFullStackCert: true,
+          isDataVisCert: true, isHonest: true
+          }}, false, true);
+        }
+        db.close();
     });
 }
 
